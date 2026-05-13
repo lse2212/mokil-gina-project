@@ -118,8 +118,8 @@ export default function App() {
   }, [messages, isLoading]);
 
   const callGeminiAPI = async (chatHistory) => {
-    const apiKey = ""; // API 키는 환경에서 자동 제공됨
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+    const apiKey = VITE_GEMINI_API_KEY; // API 키는 환경에서 자동 제공됨
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
     // API가 요구하는 형식으로 메시지 히스토리 변환
     const formattedContents = chatHistory.map(msg => ({
