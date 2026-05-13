@@ -118,8 +118,20 @@ export default function App() {
   }, [messages, isLoading]);
 
   const callGeminiAPI = async (chatHistory) => {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY.trim(); // API 키는 환경에서 자동 제공됨
+    // 1. API 키 불러오기
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+    // [안전장치] 키가 비어있거나 undefined 상태라면 여기서 멈춥니다!
+    if (!apiKey || apiKey === 'undefined') {
+      console.error("❌ 치명적 에러: Vercel에서 API 키가 넘어오지 않았습니다.");
+      return "선생님, 열쇠(API Key)가 없어! Vercel에서 환경 변수 설정 후 꼭 'Redeploy'를 해줘.";
+    }
+
+    // 2. 키가 정상이라면 주소를 완성합니다.
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    
+    // 콘솔창에 실제 주소가 어떻게 찍히는지 확인합니다 (보안상 키는 빼고 출력)
+    console.log("✅ 정상 연결 시도 중:", url.split('?')[0]);
 
     // API가 요구하는 형식으로 메시지 히스토리 변환
     const formattedContents = chatHistory.map(msg => ({
@@ -133,6 +145,8 @@ export default function App() {
         parts: [{ text: SYSTEM_PROMPT }]
       }
     };
+    
+    // ... (이하 기존의 try-catch 코드는 그대로 유지) ...
 
     let retries = 5;
     let delay = 1000;
